@@ -716,8 +716,8 @@ namespace LaserGRBL.RasterConverter
 						conf.markSpeed = MarkSpeed;
 						conf.travelSpeed = TravelSpeed;
 
-						conf.modWhite = WhatModulate == ModulationMode.SpeedModulation ? MinSpeed : MinPower;
-						conf.modBlack = WhatModulate == ModulationMode.SpeedModulation ? MaxSpeed : MaxPower;
+						conf.modWhite = WhatModulationToUse == ModulationMode.SpeedModulation ? MinSpeed : MinPower;
+						conf.modBlack = WhatModulationToUse == ModulationMode.SpeedModulation ? MaxSpeed : MaxPower;
 						conf.lOn = LaserOn;
 						conf.lOff = LaserOff;
 						conf.dir = SelectedTool == ImageProcessor.Tool.Vectorize ? FillingDirection : LineDirection;
@@ -725,7 +725,7 @@ namespace LaserGRBL.RasterConverter
 						conf.oY = TargetOffset.Y;
 						conf.borderSpeed = BorderSpeed;
 
-						conf.mod = WhatModulate;
+						conf.mod = WhatModulationToUse;
 
 						if (SelectedTool == ImageProcessor.Tool.Line2Line || SelectedTool == ImageProcessor.Tool.Dithering)
 							mCore.LoadedFile.LoadImageL2L(bmp, mFileName, conf);
@@ -905,5 +905,8 @@ namespace LaserGRBL.RasterConverter
 		public Bitmap Original { get {return mResized;}}
 
 		public ModulationMode WhatModulate { get; set; }
+
+		public ModulationMode WhatModulationToUse
+		{ get { return mTool == Tool.Dithering ? ModulationMode.BinaryModulation : WhatModulate; } }
 	}
 }

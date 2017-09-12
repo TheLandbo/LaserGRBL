@@ -29,8 +29,6 @@ namespace LaserGRBL.RasterConverter
 			BackColor = ColorScheme.FormBackColor;
 			GbLaser.ForeColor = GbSize.ForeColor = GbSpeed.ForeColor = ForeColor = ColorScheme.FormForeColor;
 			BtnCancel.BackColor = BtnCreate.BackColor = ColorScheme.FormButtonsColor;
-
-			LblSmin.Visible = LblSmax.Visible = IIMaxPower.Visible = IIMinPower.Visible = BtnModulationInfo.Visible = supportPWM;
 		}
 		
 		ImageProcessor IP;
@@ -39,7 +37,7 @@ namespace LaserGRBL.RasterConverter
 		{
 			IP = processor;
 			
-			
+			// --- INIZIALIZZA I DEFAULT ---
 			if (IP.Original.Height < IP.Original.Width)
 			{
 				IISizeW.CurrentValue = (int)Settings.GetObject("GrayScaleConversion.Gcode.BiggestDimension", 100);
@@ -76,15 +74,18 @@ namespace LaserGRBL.RasterConverter
 			IIMinSpeed.CurrentValue = IP.MinSpeed = (int)Settings.GetObject("GrayScaleConversion.Gcode.LaserOptions.SpeedMin", 1000);
 			IIMaxSpeed.CurrentValue = IP.MaxSpeed = (int)Settings.GetObject("GrayScaleConversion.Gcode.LaserOptions.SpeedMax", 4000);
 
-			IILinearFilling.Visible = LblLinearFilling.Visible = LblLinearFillingmm.Visible = (IP.SelectedTool == ImageProcessor.Tool.Line2Line || IP.SelectedTool == ImageProcessor.Tool.Dithering || (IP.SelectedTool == ImageProcessor.Tool.Vectorize && (IP.FillingDirection != ImageProcessor.Direction.None)));
-			IIBorderTracing.Visible = LblBorderTracing.Visible = LblBorderTracingmm.Visible = (IP.SelectedTool == ImageProcessor.Tool.Vectorize);
-			LblLinearFilling.Text = IP.SelectedTool == ImageProcessor.Tool.Vectorize ? "Filling Speed" : "Engraving Speed";
 
-			IIOffsetX.CurrentValue = IP.TargetOffset.X = (int)Settings.GetObject("GrayScaleConversion.Gcode.Offset.X", 0);
-			IIOffsetY.CurrentValue = IP.TargetOffset.Y = (int)Settings.GetObject("GrayScaleConversion.Gcode.Offset.Y", 0);
+			// --- ATTIVA I GIUSTI CONTROLLI ---
+			IIBorderTracing.Visible = LblBorderTracing.Visible = LblBorderTracingmm.Visible = (IP.SelectedTool == ImageProcessor.Tool.Vectorize);
+
+			IILinearFilling.Visible = LblLinearFilling.Visible = LblLinearFillingmm.Visible = ((IP.SelectedTool == ImageProcessor.Tool.Line2Line && IP.WhatModulate != ImageProcessor.ModulationMode.SpeedModulation) || IP.SelectedTool == ImageProcessor.Tool.Dithering || (IP.SelectedTool == ImageProcessor.Tool.Vectorize && (IP.FillingDirection != ImageProcessor.Direction.None)));
+			LblLinearFilling.Text = IP.SelectedTool == ImageProcessor.Tool.Vectorize ? "Filling Speed" : "Engraving Speed";
 
 			BtnModulationInfo.Visible = LblSmax.Visible = LblSmin.Visible = IIMaxPower.Visible = IIMinPower.Visible = IP.WhatModulate == ImageProcessor.ModulationMode.PowerModulation;
 			BtnSpeedModulationInfo.Visible = LblFmax.Visible = LblFmin.Visible = IIMaxSpeed.Visible = IIMinSpeed.Visible = IP.WhatModulate == ImageProcessor.ModulationMode.SpeedModulation;
+			
+			IIOffsetX.CurrentValue = IP.TargetOffset.X = (int)Settings.GetObject("GrayScaleConversion.Gcode.Offset.X", 0);
+			IIOffsetY.CurrentValue = IP.TargetOffset.Y = (int)Settings.GetObject("GrayScaleConversion.Gcode.Offset.Y", 0);
 
 			ShowDialog();
 		}

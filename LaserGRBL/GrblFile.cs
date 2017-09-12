@@ -323,6 +323,10 @@ namespace LaserGRBL
 			//relative
 			list.Add(new GrblCommand("G91"));
 
+			//use max power if using speed modulation
+			if (c.mod == RasterConverter.ImageProcessor.ModulationMode.SpeedModulation)
+				list.Add(new GrblCommand(String.Format("S{0}", c.maxPower)));
+
 			//generate line2line code
 			ImageLine2Line(bmp, c);
 
